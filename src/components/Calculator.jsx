@@ -55,7 +55,7 @@ export default class Calculator extends Component {
   render() {
     return (
       <div className="main-container">
-        <InputPanel result={this.state.result} text={this.state.text} />
+        <InputPanel result={this.state.result} />
         <Items addToInput={this.addToInput} />
       </div>
     )
