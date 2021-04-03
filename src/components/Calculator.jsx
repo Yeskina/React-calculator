@@ -1,63 +1,52 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react';
 import Items from './Items'
 import InputPanel from './InputPanel'
 
-export default class Calculator extends Component {
-  constructor(props) {
-    super(props)
+const Calculator = () => {
+  const [result, setResult] = useState('')
+  const [isCalculated, setIsCalculated] = useState(false)
 
-    this.state = {
-      wasCalculated: false,
-      result: '',
-    }
-  }
+  const addToInput = (buttonName) => {
 
-  addToInput = (buttonName) => {
     if (buttonName === '=') {
-      this.calculate()
+      calculate()
     } else if (buttonName === 'C') {
-      this.reset()
+      reset()
     } else if (buttonName === '←') {
-      this.backspace()
+      backspace()
     } else {
-      if (this.state.wasCalculated) {
-        this.setState({
-          result: '',
-          wasCalculated: false,
-        })
-      }
-      this.setState((state) => ({
-        result: state.result + buttonName,
-      }))
+      setResult(result + buttonName)
     }
   }
 
-  backspace = () => {
-    this.setState({
-      result: this.state.result.slice(0, -1),
-    })
+  useEffect(() => {
+    if (isCalculated === true && result === '') {
+      reset()
+      setIsCalculated(false)
+    }
+  }, [isCalculated, result])
+  
+console.warn(isCalculated)
+
+  const backspace = () => {
+    setResult(result.slice(0, -1))
   }
 
-  reset = () => {
-    this.setState({
-      result: '',
-    })
+  const reset = () => {
+    setResult('')
   }
 
-  calculate = () => {
-    this.setState({
-      // eslint-disable-next-line no-eval
-      result: String(eval(this.state.result)),
-      wasCalculated: true,
-    })
+  const calculate = () => {
+    setResult(String(eval(result)))
+    setIsCalculated(true)
   }
 
-  render() {
-    return (
-      <div className="main-container">
-        <InputPanel result={this.state.result} />
-        <Items addToInput={this.addToInput} />
-      </div>
-    )
-  }
+  return (
+    <div className="main-container">
+      <InputPanel result={result} />
+      <Items addToInput={addToInput} />
+    </div>
+  )
 }
+
+export default Calculator
